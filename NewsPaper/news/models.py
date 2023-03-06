@@ -20,7 +20,8 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(unique= True)
+    name = models.CharField(max_length = 64, unique= True)
+
 
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete = models.CASCADE)
@@ -35,7 +36,7 @@ class Post(models.Model):
 
     dateCreate = models.DateTimeField(auto_now_add = True)
     postCategory = models.ManyToManyField(Category, through= 'PostCategory')
-    title = models.CharField()
+    title = models.CharField(max_length = 256)
     text = models.TextField()
     rating  = models.IntegerField(default = 0)
 
@@ -50,9 +51,11 @@ class Post(models.Model):
     def preview(self):
         return self.text[0:123] + '...'
 
-class PostCategory(models.Model)
+
+class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete= models.CASCADE)
     category = models.ForeignKey(Category, on_delete= models.CASCADE)
+
 
 class Comment(models.Model):
     comm_post = models.ForeignKey(Post, on_delete = models.CASCADE)
@@ -62,9 +65,9 @@ class Comment(models.Model):
     comm_rating = models.IntegerField(default = 0)
 
     def like(self):
-        self.rating += 1
+        self.comm_rating += 1
         self.save()
 
     def dislike(self):
-        self.rating -= 1
+        self.comm_rating -= 1
         self.save()
